@@ -1,8 +1,10 @@
 Visualize Betterer
 
-URL: TBD
+[DEMO](https://visualize-betterer.vercel.app/)
 
-![Screenshot](/public/screenshot.png)
+![Screenshot1](/public/screenshot1.png)
+![Screenshot2](/public/screenshot2.png)
+![Screenshot3](/public/screenshot2.png)
 
 The aim of this project is to create effective visualization tools specifically designed to extract valuable insights from `betterer` test results.
 
