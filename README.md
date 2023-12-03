@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Visualize Betterer
 
-## Getting Started
+URL: TBD
 
-First, run the development server:
+![Screenshot](/public/screenshot.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+The aim of this project is to create effective visualization tools specifically designed to extract valuable insights from `betterer` test results.
+
+Refer to betterer docs to get started
+https://github.com/phenomnomnominal/betterer
+
+In order to use this tooling you need to first generate a betterer.results.json file using the below better custom reporter as part of your projects betterer setup
+
+```typescript
+// betterer-reporter.ts
+import { BettererContext, BettererContextSummary, BettererReporter } from "@betterer/betterer";
+import { BettererError } from "@betterer/errors";
+import fs from "fs";
+export const reporter: BettererReporter = createCustomReporter();
+
+function createCustomReporter(): BettererReporter {
+    return {
+        contextEnd(contextSummary: BettererContextSummary): void {
+            return fs.writeFileSync(
+                "betterer.report.json",
+                renderJSONTemplate(contextSummary),
+                "utf8"
+            );
+        },
+        contextError(_: BettererContext, error: BettererError): void {
+            console.log(error);
+        },
+    };
+}
+
+function renderJSONTemplate(contextSummary: BettererContextSummary): string {
+    const { runSummaries } = contextSummary.suites?.[0] || {};
+
+    const result = runSummaries.map(({ filePaths, ...rest }) => {
+        return {
+            timestamp: rest.timestamp,
+            testName: rest.name,
+            delta: rest.delta,
+            files: Object.keys(rest.result.value).map((key) => {
+                return {
+                    name: key,
+                    errors: rest?.result?.value?.[key]?.length || 0,
+                };
+            }),
+        };
+    });
+    return JSON.stringify(result, null, 2);
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+you can then have a specific command in you `package.json` setup to run this report.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+"scripts": {
+    "betterer:rules-report": "betterer --reporter betterer-reporter"
+  },
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This should then generate a `betterer.report.json` report when can be used with this app.
