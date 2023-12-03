@@ -1,0 +1,35 @@
+{
+    "name": "visualize-betterer",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint",
+        "prepare": "panda codegen"
+    },
+    "dependencies": {
+        "@formkit/auto-animate": "^0.8.1",
+        "@types/d3-scale": "^4.0.8",
+        "@types/react-vis": "^1.11.14",
+        "autostack-ui": "^0.1.6",
+        "d3-scale": "^4.0.2",
+        "next": "14.0.3",
+        "react": "^18",
+        "react-dom": "^18",
+        "react-dropzone": "^14.2.3",
+        "react-use": "^17.4.2",
+        "react-vis": "^1.12.1"
+    },
+    "devDependencies": {
+        "@betterer/cli": "^5.4.0",
+        "@pandacss/dev": "^0.20.1",
+        "@types/node": "^20",
+        "@types/react": "^18",
+        "@types/react-dom": "^18",
+        "eslint": "^8",
+        "eslint-config-next": "14.0.3",
+        "typescript": "^5"
+    }
+}

@@ -1,0 +1,36 @@
+@layer reset, base, tokens, recipes, utilities;
+html,
+body {
+    height: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    background: var(--colors-gray-900);
+    color: #fff;
+}
+
+/* move this to the components css using panda descendent selector */
+.rv-xy-plot__series {
+    stroke-width: 3;
+    stroke-opacity: 1;
+    stroke: var(--colors-gray-900) !important;
+}
+.high_density .rv-xy-plot__series {
+    stroke-width: 1;
+    stroke-opacity: 0.2;
+    stroke: var(--colors-gray-900) !important;
+}
+
+.animate__in {
+    animation-duration: 0.25s;
+    animation-name: animateIn;
+}
+@keyframes animateIn {
+    0% {
+        opacity: 0;
+        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+        opacity: 1;
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+}
