@@ -21,23 +21,45 @@ export type FileContents = {
 }[];
 
 export function Wrapper() {
-    const [value, setValue, onClear] = useLocalStorage("betterer", "");
+    const [localContents, setValue, onClear] = useLocalStorage("betterer", "");
     const [fileContents, setFileContents] = useState<FileContents>();
 
     useEffect(() => {
-        setFileContents(value);
-    }, [value]);
+        setFileContents(localContents);
+    }, [localContents]);
 
-    const handleFileContents = useCallback(
-        (contents: FileContents) => {
-            setFileContents(contents);
-            setValue(contents);
-        },
-        [setValue]
-    );
+    const onSave = useCallback(() => {
+        setValue(fileContents);
+    }, [setValue, fileContents]);
+
+    const handleFileContents = useCallback((contents: FileContents) => {
+        setFileContents(contents);
+    }, []);
+
     const clearFileContents = useCallback(() => {
         setFileContents(undefined);
     }, []);
+
+    const fetchData = useCallback(async () => {
+        console.log("fetchData");
+        const data = await fetch(`/api/demoData`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        console.log("data", data);
+        if (data.status === 200) {
+            const result = await data.json();
+            setFileContents(result);
+        }
+    }, []);
+
+    const loadDemoContents = useCallback(() => {
+        fetchData();
+    }, [fetchData]);
+
     return (
         <div style={{ height: "100%" }}>
             {fileContents ? (
@@ -53,9 +75,9 @@ export function Wrapper() {
                             className={css({
                                 px: "2",
                                 py: "1",
-                                bg: "blue.500",
+                                bg: "red.900",
                                 borderRadius: "md",
-                                _hover: { bg: "blue.600" },
+                                _hover: { bg: "red.700" },
                                 cursor: "pointer",
                             })}
                             onClick={clearFileContents}
@@ -63,23 +85,58 @@ export function Wrapper() {
                             Clear
                         </button>
 
+                        {localContents ? (
+                            <button
+                                className={css({
+                                    px: "2",
+                                    py: "1",
+                                    bg: "red.500",
+                                    borderRadius: "md",
+                                    _hover: { bg: "red.600" },
+                                    cursor: "pointer",
+                                })}
+                                onClick={onClear}
+                            >
+                                Reset Local Storage
+                            </button>
+                        ) : null}
+
+                        {!localContents ? (
+                            <button
+                                className={css({
+                                    px: "2",
+                                    py: "1",
+                                    bg: "blue.500",
+                                    borderRadius: "md",
+                                    _hover: { bg: "blue.600" },
+                                    cursor: "pointer",
+                                })}
+                                onClick={onSave}
+                            >
+                                Save to Local Storage
+                            </button>
+                        ) : null}
+                    </AutoStack>
+                </>
+            ) : (
+                <>
+                    <AutoStack hAlign="right" className={css({ p: 3 })}>
                         <button
                             className={css({
                                 px: "2",
                                 py: "1",
-                                bg: "red.500",
+                                bg: "green.500",
                                 borderRadius: "md",
-                                _hover: { bg: "red.600" },
+                                _hover: { bg: "green.600" },
                                 cursor: "pointer",
                             })}
-                            onClick={onClear}
+                            onClick={loadDemoContents}
                         >
-                            Reset Local Storage
+                            Load Demo Data
                         </button>
                     </AutoStack>
+                    <DropZone onFileContents={handleFileContents} />
                 </>
-            ) : (
-                <DropZone onFileContents={handleFileContents} />
             )}
         </div>
     );
