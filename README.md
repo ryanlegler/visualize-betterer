@@ -1,17 +1,27 @@
-Visualize Betterer
+☀️Visualize Betterer
 
-[DEMO](https://visualize-betterer.vercel.app/)
-
-![Screenshot1](/public/screenshot1.png)
-![Screenshot2](/public/screenshot2.png)
-![Screenshot3](/public/screenshot3.png)
+Demo Url:
+[https://visualize-betterer.vercel.app/](https://visualize-betterer.vercel.app/)
 
 The aim of this project is to create effective visualization tools specifically designed to extract valuable insights from `betterer` test results.
 
-Refer to betterer docs to get started
-https://github.com/phenomnomnominal/betterer
+Refer to the [betterer docs](https://github.com/phenomnomnominal/betterer) for general information on the betterer project. It's really cool!
 
-In order to use this tooling you need to first generate a betterer.results.json file using the below better custom reporter as part of your projects betterer setup
+# Motivation?
+
+1. The standard CLI betterer report is great but it's limited in it's capabilities when it comes to segmenting your results by test -> file.
+
+2. Other Cool stuff we can add here that would be impractical for a CLI tool
+
+# Usage
+
+Try out the visualizer with the `Load Demo Data` button.
+
+To visualize results from your own betterer data you first need to generate a `betterer.results.json` file.
+
+You can achieve this with a betterer custom [reporter](https://phenomnomnominal.github.io/betterer/docs/reporters/)
+
+1. Add the custom reporter to your project
 
 ```typescript
 // betterer-reporter.ts
@@ -55,7 +65,7 @@ function renderJSONTemplate(contextSummary: BettererContextSummary): string {
 }
 ```
 
-you can then have a specific command in you `package.json` setup to run this report.
+2. Add the command to your `package.json` pointed at the reporter file you just added.
 
 ```bash
 "scripts": {
@@ -63,4 +73,12 @@ you can then have a specific command in you `package.json` setup to run this rep
   },
 ```
 
+3. Execute this script and generate the report
+
+```bash
+yarn run betterer:rules-report
+```
+
 This should then generate a `betterer.report.json` report when can be used with this app.
+
+Now, simply drag the generated report json file onto the drag-n-drop area of the `visualize-betterer` app or click it to open the browsers native file picker.

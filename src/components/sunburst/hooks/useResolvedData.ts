@@ -12,6 +12,7 @@ export function useResolvedData(preparedFileContents: FileContents) {
                         name: test.testName,
                         title: test.testName,
                         root_index: index,
+                        delta: test.delta,
                         // bigness: test.files.length,
                         // bigness: test.files.reduce((acc, curr) => acc + curr.errors, 0) * 0.01,
                         sortSize: test.files.reduce((acc, curr) => acc + curr.errors, 0),

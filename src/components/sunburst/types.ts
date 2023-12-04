@@ -4,6 +4,11 @@ export type Datum = {
     sortSize: number;
     root_index: number;
     bigness?: number;
+    delta: {
+        baseline?: number;
+        result?: number;
+        diff?: number;
+    };
     children: {
         name: string;
         rootName: string;
