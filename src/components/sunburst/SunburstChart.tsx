@@ -9,25 +9,29 @@ import { FADED_ALPHA, FADED_ZEBRA_ALPHA, MAX_FILES, MAX_TESTS } from "./constant
 import { usePreparedFileContents } from "./hooks/usePreparedFileContents";
 import { useResolvedData } from "./hooks/useResolvedData";
 import { scaleLinear } from "d3-scale";
+import { useSearchParams } from "next/navigation";
 
 export function SunburstChart({ fileContents }: { fileContents: FileContents }) {
-    const colorsScale: string[] = useMemo(() => {
-        const maxItems =
-            MAX_TESTS !== -1 ? Math.min(MAX_TESTS, fileContents.length) : fileContents.length;
-        const start = "#e4f700";
-        const stop = "#ea3402";
-        const range = new Array(maxItems).fill(0);
-        const getColorValue = scaleLinear()
-            .domain([0, maxItems - 1])
-            .range([start, stop] as any);
-        return range.map((_, index) => getColorValue(index) as unknown as string);
-    }, [fileContents.length]);
+    const params = useSearchParams();
 
     const [hoveredCell, setHoveredCell] = useState<SunburstPoint>();
     const [ref, { width, height }] = useMeasure();
 
     const preparedFileContents = usePreparedFileContents(fileContents);
     const resolvedData = useResolvedData(preparedFileContents);
+
+    const colorsScale: string[] = useMemo(() => {
+        const maxItems =
+            MAX_TESTS !== -1 ? Math.min(MAX_TESTS, fileContents.length) : fileContents.length;
+        const start = params.get("color-start") || "#e4f700";
+        const stop = params.get("color-stop") || "#ea3402";
+
+        const range = new Array(maxItems).fill(0);
+        const getColorValue = scaleLinear()
+            .domain([0, maxItems - 1])
+            .range([start, stop] as any);
+        return range.map((_, index) => getColorValue(index) as unknown as string);
+    }, [fileContents.length, params]);
 
     const handleHoveredCellOver = useCallback((cell: SunburstPoint) => {
         if (cell.x && cell.y && cell.depth > 0) {

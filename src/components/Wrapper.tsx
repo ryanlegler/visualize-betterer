@@ -41,7 +41,6 @@ export function Wrapper() {
     }, []);
 
     const fetchData = useCallback(async () => {
-        console.log("fetchData");
         const data = await fetch(`/api/demoData`, {
             method: "GET",
             headers: {
@@ -49,7 +48,6 @@ export function Wrapper() {
             },
         });
 
-        console.log("data", data);
         if (data.status === 200) {
             const result = await data.json();
             setFileContents(result);
