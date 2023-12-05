@@ -12,7 +12,8 @@ import { scaleLinear } from "d3-scale";
 
 export function SunburstChart({ fileContents }: { fileContents: FileContents }) {
     const colorsScale: string[] = useMemo(() => {
-        const maxItems = Math.min(MAX_TESTS, fileContents.length);
+        const maxItems =
+            MAX_TESTS !== -1 ? Math.min(MAX_TESTS, fileContents.length) : fileContents.length;
         const start = "#e4f700";
         const stop = "#ea3402";
         const range = new Array(maxItems).fill(0);
@@ -79,6 +80,20 @@ export function SunburstChart({ fileContents }: { fileContents: FileContents }) 
         return MAX_FILES === -1 || MAX_FILES > 20;
     }, []);
 
+    const totalErrorCount = useMemo(() => {
+        return resolvedData?.children?.reduce((acc, curr) => acc + curr.sortSize, 0);
+    }, [resolvedData]);
+    const allFiles = useMemo(() => {
+        return resolvedData?.children?.reduce(
+            (acc: any, curr) => [...acc, ...curr.children.map((item) => item.name)],
+            []
+        );
+    }, [resolvedData]);
+
+    const deduplicatedFiles = useMemo(() => {
+        return [...new Set(allFiles)];
+    }, [allFiles]);
+
     return (
         <div
             ref={ref as unknown as MutableRefObject<HTMLDivElement>}
@@ -105,89 +120,146 @@ export function SunburstChart({ fileContents }: { fileContents: FileContents }) 
                     getSize={(d: SunburstPoint) => d.bigness}
                     getColor={handleGetColor}
                 >
-                    {hoveredCell ? (
-                        <Hint
-                            value={{ x: 0, y: 0 }}
-                            className="animate__in"
-                            style={{
-                                width: "100%",
-                                height: "100%",
+                    <Hint
+                        value={{ x: 0, y: 0 }}
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            pointerEvents: "none",
+                        }}
+                    >
+                        <AutoStack
+                            vAlign="middle"
+                            hAlign="center"
+                            direction="vertical"
+                            gap="4"
+                            className={css({
+                                position: "relative",
+                                height: "1/2",
+                                width: "1/2",
+                                left: "-25%",
+                                top: "-25%",
                                 pointerEvents: "none",
-                            }}
+                            })}
                         >
-                            <AutoStack
-                                vAlign="middle"
-                                hAlign="center"
-                                direction="vertical"
-                                gap="4"
-                                className={css({
-                                    position: "relative",
-                                    height: "1/2",
-                                    width: "1/2",
-                                    left: "-25%",
-                                    top: "-25%",
-                                    pointerEvents: "none",
-                                })}
-                            >
-                                <AutoStack direction="vertical" hAlign="center">
-                                    <span
-                                        className={css({
-                                            color: "gray.400",
-                                            fontFamily: "mono",
-                                            textTransform: "uppercase",
-                                            fontSize: "xs",
-                                        })}
-                                    >
-                                        Error Count
-                                    </span>
-                                    <AutoStack vAlign="middle" hAlign="center" gap="2">
+                            {hoveredCell ? (
+                                <AutoStack
+                                    direction="vertical"
+                                    hAlign="center"
+                                    className="animate__in"
+                                    gap="4"
+                                >
+                                    <AutoStack direction="vertical" hAlign="center" gap="2">
                                         <span
                                             className={css({
                                                 color: "gray.400",
                                                 fontFamily: "mono",
                                                 textTransform: "uppercase",
-                                                fontSize: "5xl",
+                                                fontSize: "xs",
                                             })}
                                         >
-                                            ×
+                                            Error Count
                                         </span>
-                                        <div
-                                            className={css({
-                                                fontSize: "7xl",
-                                                lineHeight: 0.75,
-                                                fontWeight: "bold",
-                                            })}
-                                        >
-                                            {hoveredCell.bigness?.toLocaleString()}
-                                        </div>
+                                        <AutoStack vAlign="middle" hAlign="center">
+                                            <span
+                                                className={css({
+                                                    color: "gray.600",
+                                                    fontFamily: "mono",
+                                                    textTransform: "uppercase",
+                                                    fontSize: "3xl",
+                                                })}
+                                            >
+                                                ×
+                                            </span>
+                                            <div
+                                                className={css({
+                                                    fontSize: "7xl",
+                                                    lineHeight: 0.75,
+                                                    fontWeight: "bold",
+                                                })}
+                                            >
+                                                {hoveredCell.bigness?.toLocaleString()}
+                                            </div>
+                                        </AutoStack>
                                     </AutoStack>
-                                </AutoStack>
-                                <div
-                                    className={css({
-                                        px: "2",
-                                        py: "1",
-                                        bg: "gray.700",
-                                        borderRadius: "md",
-                                    })}
-                                >
-                                    {hoveredCell.name}
-                                </div>
-
-                                {hoveredCell.rootName ? (
                                     <div
                                         className={css({
                                             px: "2",
                                             py: "1",
-                                            bg: "gray.800",
+                                            bg: "gray.700",
                                             borderRadius: "md",
                                         })}
                                     >
-                                        {hoveredCell.rootName}
+                                        {hoveredCell.name}
                                     </div>
-                                ) : null}
-                            </AutoStack>
-                        </Hint>
-                    ) : null}
+
+                                    {hoveredCell.rootName ? (
+                                        <div
+                                            className={css({
+                                                px: "2",
+                                                py: "1",
+                                                bg: "gray.800",
+                                                borderRadius: "md",
+                                            })}
+                                        >
+                                            {hoveredCell.rootName}
+                                        </div>
+                                    ) : null}
+                                </AutoStack>
+                            ) : (
+                                <>
+                                    <AutoStack direction="vertical" hAlign="center" gap="2">
+                                        <AutoStack vAlign="middle" hAlign="center">
+                                            <span
+                                                className={css({
+                                                    color: "gray.600",
+                                                    fontFamily: "mono",
+                                                    textTransform: "uppercase",
+                                                    fontSize: "3xl",
+                                                })}
+                                            >
+                                                ×
+                                            </span>
+                                            <div
+                                                className={css({
+                                                    fontSize: "7xl",
+                                                    lineHeight: 0.75,
+                                                    fontWeight: "bold",
+                                                })}
+                                            >
+                                                {totalErrorCount?.toLocaleString()}
+                                            </div>
+                                        </AutoStack>
+                                        <span
+                                            className={css({
+                                                fontSize: "1xl",
+                                            })}
+                                        >
+                                            Total errors across all
+                                            <span
+                                                className={css({
+                                                    fontWeight: "bold",
+                                                })}
+                                            >
+                                                {" "}
+                                                {resolvedData?.children?.length?.toLocaleString()}{" "}
+                                            </span>
+                                            tests and
+                                            <span
+                                                className={css({
+                                                    fontWeight: "bold",
+                                                })}
+                                            >
+                                                {" "}
+                                                {deduplicatedFiles?.length?.toLocaleString()}{" "}
+                                            </span>
+                                            files
+                                        </span>
+                                    </AutoStack>
+                                </>
+                            )}
+                        </AutoStack>
+                    </Hint>
                 </Sunburst>
             ) : null}
         </div>
