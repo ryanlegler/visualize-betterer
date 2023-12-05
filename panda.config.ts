@@ -17,7 +17,16 @@ export default defineConfig({
 
     // Useful for theme customization
     theme: {
-        extend: {},
+        extend: {
+            tokens: {
+                colors: {
+                    ["betterer.red"]: { value: "#EA3402" },
+                    ["betterer.yellow"]: { value: "#CCC403" },
+                    ["betterer.bright.yellow"]: { value: "#E4F700" },
+                    // {"Scarlet":"EA3402","Lemon Lime":"E4F700","Citrine":"CCC403","Black":"020000","Lemon Lime 2":"E9FE00"}
+                },
+            },
+        },
     },
     // this ensures that all the properties are extracted for all breakpoints
     staticCss: {
