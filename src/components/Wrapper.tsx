@@ -61,7 +61,7 @@ export function Wrapper() {
     }, [fetchData]);
 
     return (
-        <div style={{ height: "100%" }}>
+        <AutoStack className={css({ h: "full", w: "full" })} hAlign="stretch" direction="vertical">
             {fileContents ? (
                 <>
                     <SunburstChart fileContents={fileContents} />
@@ -75,9 +75,9 @@ export function Wrapper() {
                             className={css({
                                 px: "2",
                                 py: "1",
-                                bg: "red.900",
+                                bg: "gray.700",
                                 borderRadius: "md",
-                                _hover: { bg: "red.700" },
+                                _hover: { bg: "gray.600" },
                                 cursor: "pointer",
                             })}
                             onClick={clearFileContents}
@@ -90,9 +90,9 @@ export function Wrapper() {
                                 className={css({
                                     px: "2",
                                     py: "1",
-                                    bg: "red.500",
+                                    bg: "betterer.red",
                                     borderRadius: "md",
-                                    _hover: { bg: "red.600" },
+                                    _hover: { bg: "red.700" },
                                     cursor: "pointer",
                                 })}
                                 onClick={onClear}
@@ -138,6 +138,6 @@ export function Wrapper() {
                     <DropZone onFileContents={handleFileContents} />
                 </>
             )}
-        </div>
+        </AutoStack>
     );
 }
