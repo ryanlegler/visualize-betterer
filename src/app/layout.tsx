@@ -4,14 +4,14 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export type SiteConfig = {
+type SiteConfig = {
     name: string;
     description: string;
     url: string;
     ogImage: string;
 };
 
-export const siteConfig: SiteConfig = {
+const siteConfig: SiteConfig = {
     name: "Visualize Betterer",
     description:
         "The aim of this project is to create effective visualization tools specifically designed to extract valuable insights from betterer test results.",
