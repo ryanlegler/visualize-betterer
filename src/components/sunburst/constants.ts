@@ -1,7 +1,7 @@
-export const MAX_TESTS: number = 5;
+export const MAX_TESTS: number = 6;
 export const MAX_FILES: number = 10;
-// const MAX_TESTS = -1;
-// const MAX_FILES = -1;
+// export const MAX_TESTS = -1;
+// export const MAX_FILES = -1;
 
 export const FADED_ALPHA: number = 0.3;
 export const FADED_ZEBRA_ALPHA: number = 0.075;
