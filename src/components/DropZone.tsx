@@ -29,7 +29,7 @@ export function DropZone({ onFileContents }: { onFileContents: (contents: any) =
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
     return (
-        <div {...getRootProps()} className={css({ height: "full", p: 10 })}>
+        <div {...getRootProps()} className={css({ height: "full", p: 4, pt: 0 })}>
             <AutoStack
                 direction="vertical"
                 hAlign="center"
@@ -37,7 +37,7 @@ export function DropZone({ onFileContents }: { onFileContents: (contents: any) =
                 className={css({
                     h: "full",
                     border: "10px dashed",
-                    borderColor: "yellow.400",
+                    borderColor: "betterer.yellow",
                     fontSize: "2xl",
                     color: "gray.500",
                     pointerEvents: "none",
@@ -54,22 +54,35 @@ export function DropZone({ onFileContents }: { onFileContents: (contents: any) =
                         ✅ Drop Away!
                     </p>
                 ) : (
-                    <p>
-                        Drag your{" "}
+                    <AutoStack vAlign="middle" gap="2">
                         <span
                             className={css({
-                                px: "2",
-                                py: "1",
-                                bg: "yellow.400",
-                                borderRadius: "md",
-                                color: "black",
-                                fontWeight: "bold",
+                                fontSize: "3xl",
                             })}
                         >
-                            betterer.report.json
-                        </span>{" "}
-                        file here
-                    </p>
+                            ☀️
+                        </span>
+                        <span>
+                            Drag your{" "}
+                            <span
+                                className={css({
+                                    px: "2",
+                                    py: "1",
+                                    bg: "betterer.yellow",
+                                    borderRadius: "md",
+                                    color: "black",
+                                    fontWeight: "bold",
+                                    _hover: {
+                                        bg: "betterer.bright.yellow",
+                                        cursor: "pointer",
+                                    },
+                                })}
+                            >
+                                betterer.report.json
+                            </span>{" "}
+                            file here
+                        </span>
+                    </AutoStack>
                 )}
             </AutoStack>
         </div>
